@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <title> Дамп базы данных </title>
+        <link rel="stylesheet" type="text/css" href="library.css" /> 
+        
+        {% macro render_table(table_key) %}
+            <div>
+                <p>
+                    <b>{{table_key}} </b>
+                </p>
+                <!-- количество строк в таблице -->
+                {% set relation = tables[table_key] %}
+                {% set n = len(relation) %}
+                <table>
+                    <!-- формируем заголовок таблицы (имена столбцов) -->
+                    <tr>
+                    {% for name in relation.dtypes.index %}
+                        <th>{{name}}</th>
+                    {% endfor %}
+                    </tr>
+                    <tbody>
+                    <!-- для всех строк таблицы -->
+                    {% for i in range(n) %}
+                        <tr>
+                        <!-- выводим значение каждого столбца -->
+                        {% for name in relation.dtypes.index %}
+                            <td> {{ relation.loc[i, name] }} </td>
+                        {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endmacro %}
+
+    </head>
+    <body>
+        <div class="flexbox">
+            {% for table_key in tables %}
+                {{ render_table(table_key) }}
+            {% endfor %}
+        </div>
+    </body>
+</html>

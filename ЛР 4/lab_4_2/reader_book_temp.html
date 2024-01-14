@@ -1,0 +1,72 @@
+<html>
+    <head>
+        <title> Карточка читателя </title>
+
+        {% macro render_list() %}
+            <p>
+                <form>
+                    Читатель:
+                    <!-- Создаем поле со списком -->
+                    <select name="reader">
+                    {% set n = len(combo_box) %}
+                    <!-- формируем строки списка (каждое значение поля
+                    reader_name - строка списка) в виде
+                    <option [selected] value = код_читателя> ФИО </option>
+                    -->
+                    {% for i in range(n) %}
+                        {% set id_r = combo_box.loc[i, "reader_id"] %}
+                        <!-- атрибут value элемента будет совпадать с id читателя -->
+                        {% if id_r == reader_id %}
+                            <!-- если код читателя из таблицы совпадает с кодом
+                            текущего читателя устанавливаем атрибут selected -->
+                            <option selected value={{id_r}}>
+                        {% else %}
+                        <option value={{id_r}}>
+                        {% endif %}
+                        {{ combo_box.loc[i, "reader_name"] }}
+                        </option>
+                    {% endfor %}
+                    </select>
+                    <input type="submit" value="Найти">
+                </form>
+            </p>
+        {% endmacro %}
+
+        {% macro render_table(table_name, relation) %}
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan = {{ len(relation.dtypes.index) }}>
+                            {{ table_name }}
+                        </th>
+                    </tr>
+                    <tr>
+                        {% for name in relation.dtypes.index %}
+                            <th> 
+                                {{ name }}
+                            </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% set n = len(relation) %}
+                    {% for i in range(n) %}
+                        <tr>
+                            {% for name in relation.dtypes.index %}
+                                {% if relation.loc[i, name] == None %}
+                                    <td> <input type="submit" value="Сдать"> </td>
+                                {% else %}
+                                    <td> {{ relation.loc[i, name] }} </td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endmacro %}
+    </head>
+    <body>
+        {{ render_list() }}
+        {{ render_table("Карточка", book_reader) }}
+    </body>
+</html>

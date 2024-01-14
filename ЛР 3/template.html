@@ -1,0 +1,62 @@
+{% macro render_table(table_list, n) %}
+    <table>
+        <thead>
+            {% for key in table_list[0] %}
+                <th>{{key}}</th>
+            {% endfor %}
+        </thead>
+        <tbody>
+            {% if is_correct_amount(n) and length(table_list) > n%}
+                {% for i in range(0, ceiled(n/2)) %}
+                    <tr>
+                        <td>{{table_list[i].title}}</td>
+                        <td>{{table_list[i].author}}</td>
+                        <td>{{table_list[i].price}}</td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td>. . .</td>
+                    <td>. . .</td>
+                    <td>. . .</td>
+                </tr>
+                {% for i in range(length(table_list) - (n - ceiled(n/2)), length(table_list)) %}
+                    <tr>
+                        <td>{{table_list[i].title}}</td>
+                        <td>{{table_list[i].author}}</td>
+                        <td>{{table_list[i].price}}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                {% for i in range(0, length(table_list)) %}
+                    <tr>
+                        <td>{{table_list[i].title}}</td>
+                        <td>{{table_list[i].author}}</td>
+                        <td>{{table_list[i].price}}</td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+{% endmacro %}
+
+
+<html>
+    <head>
+        <title>Лабораторная работа №3</title>
+    </head>
+    <body>
+        <h3>Задание 1</h3>
+        {% for i in range(0, length(radio_list)) %}
+            {% if i == checked_num %}
+                <input type="radio" id={{radio_list[i]}} name={{group_name}} value={{radio_list[i]}} checked>
+            {% else %}
+                <input type="radio" id={{radio_list[i]}} name={{group_name}} value={{radio_list[i]}}>
+            {% endif %}
+            <label for={{radio_list[i]}}>{{radio_list[i]}}</label>
+        {%endfor%}
+        
+        <br>
+        <h3>Задание 2</h3>
+        {{render_table(table_list, n)}}
+    </body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title> Приветствие </title>
+    </head>
+    <body>
+        <form action="{{ url_for('index') }}" method="get">
+            <p>
+                {% if action == "Отправить" %}
+                    Имя: <input type=text name=username value={{name}}>
+                {% else %}
+                    Имя: <input type=text name=username>
+                {% endif %}
+            </p>
+            <p>
+                Пол:
+                <br>
+                
+                <input 
+                {% if gender == "m" and action == "Отправить" %}
+                    checked 
+                {% endif %}
+                type="radio" name="gender" value=m> М
+                <br>
+                <input
+                {% if gender == "w" and action == "Отправить" %}
+                    checked
+                {% endif %}
+                type="radio" name="gender" value=w> Ж
+
+            </p>
+            <p>
+                Образовательная программа:
+                <select name=program>
+                    {% for i in range(len(program_list)) %}
+                        {% if program_list[i] == program and action == "Отправить" %}
+                            <option selected value={{i}}>{{program_list[i]}} </option>
+                        {% else %}
+                            <option value={{i}}>{{program_list[i]}} </option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </p>
+            <p>
+                Выберите дисциплины, которые Вы изучаете:<br>
+                {% for i in range(len(subjects_list)) %}
+                    {% if subjects_list[i] in subjects_select and action == "Отправить" %}
+                        <input checked type = checkbox name=subject[] value={{i}}> {{subjects_list[i]}}<br>
+                    {% else %}
+                        <input type = checkbox name=subject[] value={{i}}> {{subjects_list[i]}}<br>
+                    {% endif %}
+                {% endfor %}
+            </p>
+            <p>
+                <input type=submit name="action" value=Отправить>
+                <input type=submit name="action" value=Очистить>
+            </p>
+        </form>
+        {% if name != "" and action == "Отправить" %}
+            <p>
+                Привет,
+                {% if gender == "m" %}
+                    студент
+                {% elif gender == "w" %}
+                    студентка
+                {% endif %}
+                {{name}}!
+            </p>
+            <p>
+                Ваша образовательная программа: {{ program }}
+            </p>
+        {% endif %}
+        {% if subjects_select != [] and action == "Отправить" %}
+            <p>
+                Вы изучаете дисциплины:
+                {% for sub in subjects_select %}
+                    <a href={{ url_for('subject', sub=sub) }}> {{sub}}</a>
+                    {% if sub == subjects_select[-1] %}
+                        . 
+                    {% else %}
+                        , 
+                    {% endif %}
+                {% endfor %}
+            </p>
+        {% endif %}
+    </body>
+</html>

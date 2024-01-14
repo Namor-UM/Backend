@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <title> Пример JINJA2 </title>
+    </head>
+    <body>
+        <p>
+            Привет, <b style="color: green">{{users[ind]['name']}}</b>!
+        </p>
+        <p>
+            Ваша образовательная программа <b>{{users[ind]['program']}}</b>
+        </p>
+        <p>
+            Вы изучаете дисциплины:<br>
+            <ul>
+                <li>
+                    {{users[ind]['subjects'][0]}},
+                </li>
+                <li>
+                    {{users[ind]['subjects'][1]}},
+                </li>
+                <li>
+                    {{users[ind]['subjects'][2]}}.
+                </li>
+            </ul>
+        </p>
+    </body>
+</html>

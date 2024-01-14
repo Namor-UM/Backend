@@ -1,0 +1,134 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        {% macro render_parameters() %}
+            <p>
+                Параметры:
+                <select name="inputs">
+                    <option
+                    {% if inputs=="side_n_angle" %}
+                        selected
+                    {% endif %}
+                    value="side_n_angle">Сторона и угол</option>
+                    <option
+                    {% if inputs=="diagonals" %}
+                        selected
+                    {% endif %}
+                    value="diagonals">Диагонали</option>
+                </select>
+                <input type="submit" name="action" value="Показать">
+            </p>
+        {% endmacro %}
+
+        {% macro render_input_fields() %}
+            <p>
+                {% if action == "Очистить" %}
+                    {% if inputs == "side_n_angle" %}
+                        <img src="/static/images/side_n_angle.png">
+                        <br>
+                        Сторона: <input type="text" name="x1"> 
+                        <br>
+                        Угол (град.): <input type="text" name="x2">
+                    {% else %}
+                        <img src="/static/images/diagonals.png">
+                        <br>
+                        Диагональ 1: <input type="text" name="x1">
+                        <br>
+                        Диагональ 2: <input type="text" name="x2">
+                    {% endif %}
+                    Найти:
+                    {% for i in range(len(output_names)) %}
+                        <input type="checkbox" name="outputs" value={{i}}> {{output_names[i]}}
+                    {% endfor %}
+                {% else %}
+                    {% if inputs == "side_n_angle" %}
+                        <img src="/static/images/side_n_angle.png">
+                        <table>
+                            <tr>
+                                <td>
+                                    Сторона:
+                                </td>
+                                <td>
+                                    <input type="text" name="x1" value={{x1}}>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Угол (град.):
+                                </td>
+                                <td>
+                                    <input type="text" name="x2" value={{x2}}>
+                                </td>
+                            </tr>
+                        </table>
+                    {% else %}
+                        <img src="/static/images/diagonals.png">
+                        <table>
+                            <tr>
+                                <td>
+                                    Диагональ 1:
+                                </td>
+                                <td>
+                                    <input type="text" name="x1" value={{x1}}>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Диагональ 2:
+                                </td>
+                                <td>
+                                    <input type="text" name="x2" value={{x2}}>
+                                </td>
+                            </tr>
+                        </table>
+                    {% endif %}
+                    <br><br>
+                    Найти:
+                    {% for i in range(len(output_names)) %}
+                        <br>
+                        <input type="checkbox"
+                        {% if output_names[i] in chosen_outputs %}
+                            checked
+                        {% endif %}
+                        name="outputs" value={{i}}> {{output_names[i]}}
+                    {% endfor %}
+                {% endif %}
+            </p>
+            <input type="submit" name="action" value="Вычислить">
+            <input type="submit" name="action" value="Очистить">
+        {% endmacro %}
+
+        {% macro render_calcs() %}
+            <p>
+                {% if x1 == "" or x2 == "" %}
+                    Введите параметры ромба!
+                {% elif len(chosen_outputs) == 0 %}
+                    Выберите искомое значение!
+                {% else %}
+                    Результат:
+                    {% for i in range(len(output_names)) %}
+                        {% if output_names[i] in chosen_outputs %}
+                            <br>
+                            {{output_names[i]}} = {{output_funcs[i](inputs, x1, x2)}}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </p>
+        {% endmacro %}
+
+        <title>
+            Калькулятор ромба
+        </title>
+    </head>
+    <body>
+        <form action="{{ url_for('index') }}" method="get">
+            {{ render_parameters() }}
+            {% if action != "" %}
+                {{ render_input_fields() }}
+                {% if action == "Вычислить" %}
+                    {{ render_calcs() }}
+                {% endif %}
+            {% endif %}
+        </form>
+    </body>
+</html>
